@@ -1,6 +1,6 @@
 :root {
-    font-size: 60%; /* default is 16px, if apply 60%, then the size will be 9,6px (16px * 0.6) */
-
+    font-size: 60%;
+    /* default is 16px, if apply 60%, then the size will be 9,6px (16px * 0.6) */
     /* theme colors */
     --color-background: #F0F0F7;
     --color-primary-lighter: #9871F5;
@@ -22,14 +22,18 @@
     --color-box-footer: #FAFAFC;
 }
 
+
 /* affect all html tags like as clean */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-html, body, #root {
+html,
+body,
+#root {
     /* it always resize 100% of the height screen */
     height: 100vh;
 }
@@ -44,7 +48,10 @@ body {
     justify-content: center;
 }
 
-body, input, button, textarea {
+body,
+input,
+button,
+textarea {
     /* rem - take the font and increasing 60% of the size */
     /* rem is good to applying in responsible softwares */
     /* if you use this rem, you only need update the font-size of the root */
@@ -57,11 +64,14 @@ body, input, button, textarea {
     max-width: 700px;
 }
 
-/* media query - conditions to set values */
-/* if the device has min width with 700px */
-/* https://www.w3schools.com/cssref/css3_pr_mediaquery.asp */
+
+/* media query - conditions to set values
+   if the device has min width with 700px 
+   https://www.w3schools.com/cssref/css3_pr_mediaquery.asp */
+
 @media (min-width: 700px) {
-    :root {
-        font-size: 62.5%; /* 16px * 0.625 = 10px for devices with min width 700px */
+     :root {
+        font-size: 62.5%;
+        /* 16px * 0.625 = 10px for devices with min width 700px */
     }
 }
