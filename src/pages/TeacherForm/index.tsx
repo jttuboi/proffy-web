@@ -1,15 +1,19 @@
 import React, { useState, FormEvent } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import Textarea from '../../components/Textarea';
 import PageHeader from '../../components/PageHeader';
+import api from '../../services/api';
 
 import WarningIcon from '../../assets/images/icons/warning.svg';
 
 import './styles.css';
 
 function TeacherForm() {
+    const history = useHistory();
+
     const [name, setName] = useState('');
     const [avatar, setAvatar] = useState('');
     const [whatsapp, setWhatsapp] = useState('');
@@ -19,26 +23,46 @@ function TeacherForm() {
     const [cost, setCost] = useState('');
 
     const [scheduleItems, setScheduleItems] = useState([
-        { week_day: -1, from: '', to: '' }
+        { week_day: 0, from: '', to: '' }
     ]);
 
     function addNewScheduleItem() {
         setScheduleItems([
             ...scheduleItems,
-            { week_day: -1, from: '', to: '' }
+            { week_day: 0, from: '', to: '' }
         ]);
+    }
+
+    function setScheduleItemValue(position: Number, field: string, value: string) {
+        const updatedScheduleItems = scheduleItems.map((scheduleItem, index) => {
+            if (index === position) {
+                return {
+                    ...scheduleItem,
+                    [field]: value
+                };
+            }
+            return scheduleItem;
+        });
+
+        setScheduleItems(updatedScheduleItems);
     }
 
     function handleCreateClass(e: FormEvent) {
         e.preventDefault();
     
-        console.log({
+        api.post('classes', {
             name,
             avatar,
             whatsapp,
             bio,
             subject,
-            cost
+            cost: Number(cost),
+            schedule: scheduleItems
+        }).then(() => {
+            alert('Cadastro realizado com sucesso!');
+            history.push('/');
+        }).catch(() => {
+            alert('Erro no cadastro');
         });
     }
 
@@ -87,12 +111,14 @@ function TeacherForm() {
                         <button type="button" onClick={addNewScheduleItem}>+ Novo horário</button>
                         </legend>
                         {
-                            scheduleItems.map(scheduleItem => {
+                            scheduleItems.map((scheduleItem, index) => {
                                 return (
                                     <div key={scheduleItem.week_day} className="schedule-item">
                                         <Select
                                             name="week_Day"
                                             label="Dia da semana"
+                                            value={scheduleItem.week_day}
+                                            onChange={e => setScheduleItemValue(index, 'week_day', e.target.value)}
                                             options={[
                                                 { value: '0', label: 'Domingo' },
                                                 { value: '1', label: 'Segunda-feira' },
@@ -103,8 +129,8 @@ function TeacherForm() {
                                                 { value: '6', label: 'Sábado' }
                                             ]}
                                         />
-                                        <Input name="from" label="Das" type="time" />
-                                        <Input name="to" label="Até" type="time" />
+                                        <Input name="from" label="Das" type="time" value={scheduleItem.from} onChange={e => setScheduleItemValue(index, 'from', e.target.value)} />
+                                        <Input name="to" label="Até" type="time" value={scheduleItem.to} onChange={e => setScheduleItemValue(index, 'to', e.target.value)} />
                                     </div>
                                 );
                             })
